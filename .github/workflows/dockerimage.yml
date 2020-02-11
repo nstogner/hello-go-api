@@ -8,4 +8,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag nstogner/hello-go-api:$(date +%s)
+      run: docker build . --file Dockerfile --tag nstogner/hello-go-api:latest
+    - name: Push the Docker image
+      with:
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      run: docker push nstogner/hello-go-api:latest
