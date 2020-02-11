@@ -10,8 +10,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag nstogner/hello-go-api:latest
     - name: Push the Docker image
-      with:
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
       run: docker push nstogner/hello-go-api:latest
