@@ -8,11 +8,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag nstogner/hello-go-api:latest
+      run: docker build . --file Dockerfile --tag nstogner/hello-go-api:${GITHUB_SHA::8}
     - name: Login to Dockerhub
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Push the Docker image
-      run: docker push nstogner/hello-go-api:latest
+      run: docker push nstogner/hello-go-api:${GITHUB_SHA::8}
