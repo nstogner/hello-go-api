@@ -34,7 +34,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        repository: 'github.com/nstogner/k8s-sample-apps'
+        repository: nstogner/k8s-sample-apps
     - name: List
       run: ls -lah k8s-sample-apps
       
