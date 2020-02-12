@@ -69,4 +69,5 @@ jobs:
         git diff
         git add ./hello-api/deployment.yaml
         git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
-        git push
+        export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
+        git push "${REMOTE_REPO}" HEAD:master
