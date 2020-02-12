@@ -8,6 +8,8 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
+const message = "Hello! 1"
+
 func main() {
 	var cfg struct {
 		Addr string `envconfig:"ADDR" default:":8080"`
@@ -25,5 +27,5 @@ type response struct {
 
 func handle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response{Msg: "Hello!"})
+	json.NewEncoder(w).Encode(response{Msg: message})
 }
