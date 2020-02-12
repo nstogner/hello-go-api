@@ -9,7 +9,7 @@ on:
 
 env:
   IMAGE_NAME: nstogner/hello-go-api
-  IMAGE_TAG: ${{ .github.sha }}
+  IMAGE_TAG: ${{ github.sha }}
 
 jobs:
   build:
