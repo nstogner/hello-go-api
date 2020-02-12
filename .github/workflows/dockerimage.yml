@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: nstogner/hello-go-api
 
 jobs:
-  build-container:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
