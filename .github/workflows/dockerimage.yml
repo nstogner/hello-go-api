@@ -49,8 +49,8 @@ jobs:
         mv patch.yaml ./hello-api/deployment.yaml
     - name: Commit Push
       run: |
-        git config --global user.email ci@github.com
-        git config --global user.name "${{ github.repository }}"
+        git config --global user.email nicholas.stogner@gmail.com
+        git config --global user.name "Nick Stogner"
         git diff
         git add ./hello-api/deployment.yaml
         git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
