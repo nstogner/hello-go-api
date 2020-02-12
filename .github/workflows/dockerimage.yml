@@ -68,4 +68,4 @@ jobs:
         TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
-        git push "${REMOTE_REPO}" HEAD:master -u origin $MANIFEST_BRANCH
+        git push "${REMOTE_REPO}" HEAD:$MANIFEST_BRANCH
