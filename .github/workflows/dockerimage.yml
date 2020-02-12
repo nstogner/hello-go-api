@@ -33,9 +33,17 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: nstogner/k8s-sample-apps
+#    - uses: actions/checkout@v2
+#      with:
+#        repository: nstogner/k8s-sample-apps
+#
+    - name: Clone
+      env:
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
+        git clone $REMOTE_REPO
+        cd k8s-sample-apps
     - name: Install kubectl
       run: |
         curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.2/bin/linux/amd64/kubectl
@@ -51,11 +59,11 @@ jobs:
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
-        git clone $REMOTE_REPO
+        #export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
+        #git clone $REMOTE_REPO
         git config --global user.email nicholas.stogner@gmail.com
         git config --global user.name "Nick Stogner"
         git diff
         git add ./hello-api/deployment.yaml
         git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
-        git push "${REMOTE_REPO}" HEAD:master
+        git push
