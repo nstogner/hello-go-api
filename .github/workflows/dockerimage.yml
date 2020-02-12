@@ -49,7 +49,7 @@ jobs:
         mv patch.yaml ./hello-api/deployment.yaml
     - name: Commit Changes
       env:
-        TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         git clone $REMOTE_REPO
