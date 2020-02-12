@@ -29,7 +29,7 @@ jobs:
   # Deploy by updating GitOps manifests with new image tag.
   patch-push-manifest:
     # Ensure build job passes before updating deployment.
-    # needs: build-push-image
+    needs: build-push-image
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
