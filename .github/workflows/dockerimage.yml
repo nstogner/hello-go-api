@@ -51,8 +51,8 @@ jobs:
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
-        git config --global user.email action@github.com
-        git config --global user.name "Github Action"
+        git config --global user.email nicholas.stogner@gmail.com
+        git config --global user.name "Nick Stogner"
         git diff
         git add ./hello-api/deployment.yaml
         git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
