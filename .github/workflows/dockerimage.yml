@@ -39,11 +39,10 @@ jobs:
 #
     - name: Clone
       env:
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         git clone $REMOTE_REPO
-        cd k8s-sample-apps
     - name: Install kubectl
       run: |
         curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.2/bin/linux/amd64/kubectl
@@ -59,12 +58,12 @@ jobs:
         mv patch.yaml ./hello-api/deployment.yaml
     - name: Commit Changes
       env:
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
         cd k8s-sample-apps
         #export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         #git clone $REMOTE_REPO
-        git config --global user.email nicholas.stogner@gmail.com
+        git config --global user.email nicholas.stogner@users.noreply.github.com
         git config --global user.name "Nick Stogner"
         git diff
         git add ./hello-api/deployment.yaml
