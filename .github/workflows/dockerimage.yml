@@ -42,8 +42,10 @@ jobs:
         chmod +x ./kubectl
     - name: Patch
       run: |
-        echo $(echo '{"spec":{"template":{"spec":{"containers":[{"name":"hello-api","image":"$IMAGE_NAME:${GITHUB_SHA::8}"}]}}}}' | envsubst)
-        ./kubectl patch --local -f ./hello-api/deployment.yaml -p $(echo '{"spec":{"template":{"spec":{"containers":[{"name":"hello-api","image":"$IMAGE_NAME:${GITHUB_SHA::8}"}]}}}}' | envsubst) -o yaml > patch.yaml
+        export NEW_IMAGE="$IMAGE_NAME:${GITHUB_SHA::8}"
+        export PATCH=$(echo '{"spec":{"template":{"spec":{"containers":[{"name":"hello-api","image":"$NEW_IMAGE"}]}}}}' | envsubst)
+        echo "PATCH = $PATCH"
+        ./kubectl patch --local -f ./hello-api/deployment.yaml -p $PATCH -o yaml > patch.yaml
         mv patch.yaml ./hello-api/deployment.yaml
     - name: Commit Push
       run: |
