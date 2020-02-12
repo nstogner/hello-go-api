@@ -11,25 +11,25 @@ env:
   IMAGE_NAME: nstogner/hello-go-api
 
 jobs:
-  build-push-image:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME:${GITHUB_SHA::8}
-    - name: Login to Dockerhub
-      if: github.event_name == 'push'
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - name: Push the Docker image
-      run: docker push $IMAGE_NAME:${GITHUB_SHA::8}
+#  build-push-image:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Build the Docker image
+#      run: docker build . --file Dockerfile --tag $IMAGE_NAME:${GITHUB_SHA::8}
+#    - name: Login to Dockerhub
+#      if: github.event_name == 'push'
+#      env:
+#        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#        DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+#      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+#    - name: Push the Docker image
+#      run: docker push $IMAGE_NAME:${GITHUB_SHA::8}
 
   # Deploy by updating GitOps manifests with new image tag.
   patch-push-manifest:
     # Ensure build job passes before updating deployment.
-    needs: build-push-image
+    # needs: build-push-image
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -51,10 +51,11 @@ jobs:
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
+        export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
+        git clone $REMOTE_REPO
         git config --global user.email nicholas.stogner@gmail.com
         git config --global user.name "Nick Stogner"
         git diff
         git add ./hello-api/deployment.yaml
         git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
-        export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         git push "${REMOTE_REPO}" HEAD:master
