@@ -8,7 +8,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-const message = "Hello! 1"
+const message = "Hello! 2"
 
 func main() {
 	var cfg struct {
