@@ -50,6 +50,8 @@ jobs:
         chmod +x ./kubectl
     - name: Patch
       run: |
+        ls -lah
+        cd k8s-sample-apps
         export NEW_IMAGE="$IMAGE_NAME:${GITHUB_SHA::8}"
         export PATCH=$(echo '{"spec":{"template":{"spec":{"containers":[{"name":"hello-api","image":"$NEW_IMAGE"}]}}}}' | envsubst)
         echo "PATCH = $PATCH"
@@ -59,6 +61,7 @@ jobs:
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        cd k8s-sample-apps
         #export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         #git clone $REMOTE_REPO
         git config --global user.email nicholas.stogner@gmail.com
