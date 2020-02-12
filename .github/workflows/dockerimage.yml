@@ -33,20 +33,16 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-#    - uses: actions/checkout@v2
-#      with:
-#        repository: nstogner/k8s-sample-apps
-#
+    - name: Install kubectl
+      run: |
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.2/bin/linux/amd64/kubectl
+        chmod +x ./kubectl
     - name: Clone
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         git clone $REMOTE_REPO
-    - name: Install kubectl
-      run: |
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.2/bin/linux/amd64/kubectl
-        chmod +x ./kubectl
     - name: Patch
       run: |
         ls -lah
@@ -56,17 +52,18 @@ jobs:
         echo "PATCH = $PATCH"
         ../kubectl patch --local -f ./hello-api/deployment.yaml -p $PATCH -o yaml > patch.yaml
         mv patch.yaml ./hello-api/deployment.yaml
-    - name: Commit Changes
+    - name: Commit
+      run: |
+        cd k8s-sample-apps
+        git config --global user.email actions@github.com
+        git config --global user.name "Github Actions"
+        git diff
+        git add ./hello-api/deployment.yaml
+        git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
+    - name: Push
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
         cd k8s-sample-apps
-        #export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
-        #git clone $REMOTE_REPO
-        git config --global user.email nicholas.stogner@users.noreply.github.com
-        git config --global user.name "Nick Stogner"
-        git diff
-        git add ./hello-api/deployment.yaml
-        git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         git push "${REMOTE_REPO}" HEAD:master
