@@ -1,6 +1,16 @@
 name: Docker Image CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  # Run builds for any PRs.
+  pull_request:
+
+env:
+  # TODO: Change variable to your image's name.
+  IMAGE_NAME: nstogner/hello-go-api
+  IMAGE_TAG: ${GITHUB_SHA::8}
 
 jobs:
   build:
@@ -8,11 +18,24 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag nstogner/hello-go-api:${GITHUB_SHA::8}
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$IMAGE_TAG
     - name: Login to Dockerhub
+      if: github.event_name == 'push'
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Push the Docker image
-      run: docker push nstogner/hello-go-api:${GITHUB_SHA::8}
+      run: docker push $IMAGE_NAME:$IMAGE_TAG
+  deploy:
+    # Ensure build job passes before updating deployment.
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: 'github.com/nstogner/k8s-sample-apps'
+    - name: List
+      run: ls -lah k8s-sample-apps
+      
