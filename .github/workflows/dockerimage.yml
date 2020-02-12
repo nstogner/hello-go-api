@@ -9,6 +9,7 @@ on:
 
 env:
   IMAGE_NAME: nstogner/hello-go-api
+  MANIFEST_BRANCH: hello-api
 
 jobs:
   build-push-image:
@@ -43,6 +44,7 @@ jobs:
       run: |
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         git clone $REMOTE_REPO
+        git checkout -B $MANIFEST_BRANCH
     - name: Patch
       working-directory: ./k8s-sample-apps
       run: |
@@ -65,4 +67,4 @@ jobs:
         TOKEN: ${{ secrets.GITHUB_TOKEN_MANIFESTS }}
       run: |
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
-        git push "${REMOTE_REPO}" HEAD:master
+        git push "${REMOTE_REPO}" HEAD:master -u origin $MANIFEST_BRANCH
