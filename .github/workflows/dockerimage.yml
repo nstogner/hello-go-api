@@ -8,9 +8,8 @@ on:
   pull_request:
 
 env:
-  # TODO: Change variable to your image's name.
   IMAGE_NAME: nstogner/hello-go-api
-  IMAGE_TAG: ${GITHUB_SHA::8}
+  IMAGE_TAG: ${{ .github.sha }}
 
 jobs:
   build:
