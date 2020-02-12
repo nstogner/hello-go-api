@@ -44,6 +44,7 @@ jobs:
       run: |
         export REMOTE_REPO="https://nstogner:${TOKEN}@github.com/nstogner/k8s-sample-apps.git"
         git clone $REMOTE_REPO
+        cd k8s-sample-apps
         git checkout -B $MANIFEST_BRANCH
     - name: Patch
       working-directory: ./k8s-sample-apps
