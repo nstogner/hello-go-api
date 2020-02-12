@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: CI - Build Container and Update Manifest Repo
 
 on:
   push:
@@ -42,11 +42,14 @@ jobs:
         chmod +x ./kubectl
     - name: Patch
       run: |
+        echo $(echo '{"spec":{"template":{"spec":{"containers":[{"name":"hello-api","image":"$IMAGE_NAME:${GITHUB_SHA::8}"}]}}}}' | envsubst)
         ./kubectl patch --local -f ./hello-api/deployment.yaml -p $(echo '{"spec":{"template":{"spec":{"containers":[{"name":"hello-api","image":"$IMAGE_NAME:${GITHUB_SHA::8}"}]}}}}' | envsubst) -o yaml > patch.yaml
         mv patch.yaml ./hello-api/deployment.yaml
     - name: Commit Push
       run: |
+        git config --global user.email ci@github.com
+        git config --global user.name "${{ github.repository }}"
         git diff
         git add ./hello-api/deployment.yaml
         git commit -m "Automated image tag update from github.com/${{ github.repository }} github actions CI job"
-        git push
+        # git push
