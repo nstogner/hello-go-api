@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: nstogner/hello-go-api
 
 jobs:
-  build:
+  build-push-image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -27,9 +27,9 @@ jobs:
       run: docker push $IMAGE_NAME:${GITHUB_SHA::8}
 
   # Deploy by updating GitOps manifests with new image tag.
-  update-manifest:
+  patch-push-manifest:
     # Ensure build job passes before updating deployment.
-    needs: build
+    needs: build-push-image
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -58,3 +58,4 @@ jobs:
       uses: ad-m/github-push-action@v0.5.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        repository: nstogner/k8s-sample-apps
