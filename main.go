@@ -13,12 +13,21 @@ const message = "Hello! 2"
 func main() {
 	var cfg struct {
 		Addr string `envconfig:"ADDR" default:":8080"`
+
+		HTTPS bool `envconfig:"HTTPS"`
+
+		Cert string `envconfig:"CERT" default:"server.crt"`
+		Key  string `envconfig:"KEY" default:"server.key"`
 	}
 	envconfig.MustProcess("", &cfg)
 
 	log.Printf("starting to listen on addr %v", cfg.Addr)
 
-	log.Fatal(http.ListenAndServe(cfg.Addr, http.HandlerFunc(handle)))
+	if cfg.HTTPS {
+		log.Fatal(http.ListenAndServeTLS(cfg.Addr, cfg.Cert, cfg.Key, http.HandlerFunc(handle)))
+	} else {
+		log.Fatal(http.ListenAndServe(cfg.Addr, http.HandlerFunc(handle)))
+	}
 }
 
 type response struct {

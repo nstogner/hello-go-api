@@ -11,6 +11,8 @@ FROM gcr.io/distroless/static
 WORKDIR /work
 
 COPY --from=build --chown=nonroot:nonroot /tmp/app /work/app
+COPY server.key .
+COPY server.crt .
 
 USER nonroot:nonroot
 ENTRYPOINT ["/work/app"]
